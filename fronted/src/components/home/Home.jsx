@@ -9,7 +9,7 @@ import { Link, useNavigate, useNavigation } from 'react-router-dom';
 
 export const Home = () => {
     const navigate = useNavigate();
-    const prueba = () => {window.open("https://github.com/ejcondorf88/chulla-acorde", '_blank' );}
+    const test1 = () => {window.open("https://github.com/ejcondorf88/chulla-acorde", '_blank' );}
     const pagLink = () => {navigate('BarraLinks');}
 
   return (
@@ -31,7 +31,7 @@ export const Home = () => {
         </p>
         
         <div className="flex gap-4 flex-wrap justify-center">
-          <Botones onClick={prueba} >
+          <Botones onClick={test1} >
             <div className="flex items-center gap-2">
               <Github size={20} />
               GitHub
