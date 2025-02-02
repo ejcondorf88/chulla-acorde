@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import ytService from '../../services/yt-service';
+import { data } from 'react-router-dom';
 
 // Componente de Carga
 const LoadingPage = () => (
@@ -55,32 +57,52 @@ const SearchIcon = () => (
 
 const Header = () => (
   <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-    Click en Buscar para Obtner los Acordes
+    Click en Buscar para Obtener los Acordes
   </h1>
 );
 
 const PaginaBusqueda = () => {
   const [loading, setLoading] = useState(false);
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
 
-  const handleSearch = (query) => {
+  const handleSearch = async (searchQuery) => {
     setLoading(true); // Establecemos el estado de carga a verdadero
-    console.log('Searching for:', query);
+    await getVideos(searchQuery);
+    setLoading(false); // Desactivamos el estado de carga
+  };
 
-    // Simulamos una búsqueda con un retraso
-    setTimeout(() => {
-      setLoading(false); // Una vez se completa la búsqueda, cambiamos el estado de carga
-      console.log('Search Complete');
-    }, 3000); // Puedes cambiar el tiempo de carga según lo necesites
+  const getVideos = async (searchQuery) => {
+    try {
+      const data = await ytService.getVideos(searchQuery);
+      console.log(data);
+      setQuery(searchQuery);
+      setResults(data); 
+  ; // Asumiendo que la respuesta de la API tiene un campo `items`
+    } catch (error) {
+      console.error('Error fetching videos:', error);
+    }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center px-4 pt-16">
+    <div className="min-h-screen flex flex-col items-center px-4 pt-16 ">
       {loading ? (
-        <LoadingPage /> // Muestra la página de carga mientras "loading" sea verdadero
+        <LoadingPage />
       ) : (
         <div className="w-full max-w-4xl">
           <Header />
           <SearchInput onSearch={handleSearch} />
+
+          {query && (
+            <div className="mt-8">
+              <h2 className="text-2xl font-bold text-white mb-4">
+                Resultados para: {query}
+              </h2>
+              <div>
+                {results.name}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

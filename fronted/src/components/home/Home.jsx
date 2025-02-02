@@ -14,7 +14,7 @@ export const Home = () => {
 
   return (
     <div className="min-h-screen bg-purple-900 relative flex flex-col">
-      <Fondo />
+      
       
       <div className="container mx-auto px-4 py-6 relative">
         <Logo />
@@ -38,7 +38,7 @@ export const Home = () => {
             </div>
           </Botones>
           <Botones variant="secondary" onClick={pagLink}>
-            Ingresar Link
+            Ir a la App
           </Botones>
         </div>
       </div>
