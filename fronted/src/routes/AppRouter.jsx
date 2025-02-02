@@ -2,7 +2,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Home } from "../components/home/Home";
 import NotFoundPage from "../components/home/Error404";
-import BarraLinks from "../components/BarraLinks";
+import BarraLinks from "../components/IngresoLinks/BarraLinks";
 export const AppRouter = () => {
     return (
         <BrowserRouter>
