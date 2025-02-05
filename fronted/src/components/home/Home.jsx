@@ -1,49 +1,59 @@
 import React from 'react';
-
-import { Github, Target } from 'lucide-react';
-import Fondo from './Fondo';
+import { Button } from 'primereact/button';
+import { Card } from 'primereact/card';
+import { useNavigate } from 'react-router-dom';
 import Logo from './Logo';
-import Botones from './Botones';
-import { Link, useNavigate, useNavigation } from 'react-router-dom';
-
 
 export const Home = () => {
-    const navigate = useNavigate();
-    const test1 = () => {window.open("https://github.com/ejcondorf88/chulla-acorde", '_blank' );}
-    const pagLink = () => {navigate('BarraLinks');}
+  const navigate = useNavigate();
+
+  const redirectToGitHub = () => {
+    window.open('https://github.com/ejcondorf88/chulla-acorde', '_blank');
+  };
+
+  const goToApp = () => {
+    navigate('app');
+  };
 
   return (
-    <div className="min-h-screen bg-purple-900 relative flex flex-col">
-      
-      
-      <div className="container mx-auto px-4 py-6 relative">
-        <Logo />
-      </div>
-      
-      <div className="flex-1 flex flex-col items-center justify-center relative text-center px-4">
-        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-          Obten los acordes de tu cancion favorita a travez de un link de YouTube
-        </h1>
-        
-        <p className="text-xl md:text-2xl text-purple-200 mb-12 max-w-3xl">
-          Recrea tus canciones favoritas a traves de los acordes precisos de tus canciones favoritos ayudado por IA y de forma gratuita.
-          Proyecto disponible en nuestro repositorio GitHub
-        </p>
-        
-        <div className="flex gap-4 flex-wrap justify-center">
-          <Botones onClick={test1} >
-            <div className="flex items-center gap-2">
-              <Github size={20} />
-              GitHub
-            </div>
-          </Botones>
-          <Botones variant="secondary" onClick={pagLink}>
-            Ir a la App
-          </Botones>
+    <div className="min-h-screen bg-purple-900 flex flex-col items-center justify-center p-4">
+      {/* Contenedor principal */}
+      <Card className="w-full max-w-3xl bg-transparent border-none shadow-none text-center">
+        <div className="flex flex-col items-center justify-center">
+          <Logo />
+          
+
+          {/* Título */}
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+            Obten los acordes de tu canción favorita a través de un link de YouTube
+          </h1>
+
+          {/* Descripción */}
+          <p className="text-xl md:text-2xl text-purple-200 mb-12 px-4">
+            Recrea tus canciones favoritas a través de los acordes precisos de tus canciones favoritas ayudado por IA y de forma gratuita.
+            Proyecto disponible en nuestro repositorio de GitHub.
+          </p>
+
+          {/* Botones */}
+          <div className="flex gap-4 flex-wrap justify-center">
+            {/* Botón para abrir GitHub */}
+            <Button
+              label="Ver en GitHub"
+              icon="pi pi-github"
+              className="p-button-rounded p-button-secondary p-button-outlined bg-purple-600 hover:bg-purple-700 text-slate-900"
+              onClick={redirectToGitHub}
+            />
+
+            {/* Botón para ir a la aplicación */}
+            <Button
+              label="Ir a la App"
+              icon="pi pi-arrow-right"
+              className="p-button-rounded p-button-success p-button-outlined bg-purple-600 hover:bg-purple-700 text-slate-900"
+              onClick={goToApp}
+            />
+          </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };
-
-

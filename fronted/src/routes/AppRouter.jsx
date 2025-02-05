@@ -8,7 +8,7 @@ export const AppRouter = () => {
         <BrowserRouter>
             <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/BarraLinks" element={<BarraLinks />} />
+            <Route path="/app" element={<BarraLinks />} />
             <Route path="*" element={<NotFoundPage />} />
 
             </Routes>

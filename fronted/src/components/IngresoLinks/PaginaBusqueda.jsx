@@ -1,70 +1,23 @@
 import React, { useState } from 'react';
 import ytService from '../../services/yt-service';
-import { data } from 'react-router-dom';
+import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
+import { Card } from 'primereact/card';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { useNavigate } from 'react-router-dom';
 
-// Componente de Carga
 const LoadingPage = () => (
   <div className="flex items-center justify-center min-h-screen">
     <div className="text-white text-2xl">Cargando...</div>
   </div>
 );
 
-const SearchInput = ({ onSearch }) => {
-  const [searchValue, setSearchValue] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSearch(searchValue);
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="w-full max-w-4xl">
-      <div className="relative flex items-center">
-        <input
-          type="text"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          placeholder="Busque o pegue una URL válida aquí"
-          className="w-full px-6 py-4 text-lg bg-neutral-900 border border-neutral-700 rounded-full text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
-        />
-        <button
-          type="submit"
-          className="absolute right-2 p-3 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors duration-200 flex items-center justify-center"
-        >
-          <SearchIcon />
-        </button>
-      </div>
-    </form>
-  );
-};
-
-const SearchIcon = () => (
-  <svg
-    className="w-6 h-6"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-    />
-  </svg>
-);
-
-const Header = () => (
-  <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-    Click en Buscar para Obtener los Acordes
-  </h1>
-);
-
 const PaginaBusqueda = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState(null);
 
   const handleSearch = async (searchQuery) => {
     setLoading(true); // Establecemos el estado de carga a verdadero
@@ -77,8 +30,7 @@ const PaginaBusqueda = () => {
       const data = await ytService.getVideos(searchQuery);
       console.log(data);
       setQuery(searchQuery);
-      setResults(data); 
-  ; // Asumiendo que la respuesta de la API tiene un campo `items`
+      setResults(data); // Asumiendo que la respuesta de la API tiene un campo `items`
     } catch (error) {
       console.error('Error fetching videos:', error);
     }
@@ -86,22 +38,49 @@ const PaginaBusqueda = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center px-4 pt-16 ">
+      
+      <div className="w-full max-w-4xl mb-4">
+        <Button
+          label="Ir al Inicio"
+          icon="pi pi-home"
+          className="p-button-secondary p-button-lg"
+          onClick={() => navigate('/')} // Navegar a la ruta principal ("/")
+        />
+      </div>
       {loading ? (
         <LoadingPage />
       ) : (
         <div className="w-full max-w-4xl">
-          <Header />
-          <SearchInput onSearch={handleSearch} />
+          {/* Título */}
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 text-center">
+            Busca tus canciones favoritas
+          </h1>
 
+          {/* Formulario de búsqueda */}
+          <div className="mb-8">
+            <div className="p-inputgroup">
+              <InputText
+                placeholder="Busque o pegue una URL válida aquí"
+                className="w-full p-inputtext-lg"
+                onChange={(e) => setQuery(e.target.value)}
+                value={query}
+              />
+              <Button
+                label="Buscar"
+                icon="pi pi-search"
+                className="p-button-success p-button-lg"
+                onClick={() => handleSearch(query)}
+              />
+            </div>
+          </div>
+
+          {/* Resultados */}
           {query && (
-            <div className="mt-8">
+            <Card className="bg-gray-800 border-none shadow-none">
               <h2 className="text-2xl font-bold text-white mb-4">
                 Resultados para: {query}
               </h2>
-              <div>
-                {results.name}
-              </div>
-            </div>
+            </Card>
           )}
         </div>
       )}

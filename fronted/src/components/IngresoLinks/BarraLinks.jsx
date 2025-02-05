@@ -5,7 +5,7 @@ import PaginaBusqueda from './PaginaBusqueda';
 const BarraLinks = () => {
   
   return (
-    <div className="min-h-screen bg-purple-900 relative flex flex-col">
+    <div className="min-h-screen relative flex flex-col">
       
       <div className="container mx-auto px-4 py-6 relative">
         <Logo />
