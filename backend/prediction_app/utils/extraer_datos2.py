@@ -1,68 +1,88 @@
 import json
 import os
+import math
 import librosa
+import scipy
 
-# Definición de constantes
-DATASET_PATH = r"C:\Users\Jose\Desktop\datos\Training"
-JSON_PATH = "data_Acordes.json"
-SAMPLE_RATE = 22050  # Frecuencia de muestreo
-DURACION_TRACK = 3  # Medido en segundos
-SAMPLES_POR_TRACK = SAMPLE_RATE * DURACION_TRACK
+DATASET_PATH = "F:\Datos 2.0"
+JSON_PATH = "F:\ProyectoExpoMineria\PruebaRNN\JSON\datos_acordes.json"
+SAMPLE_RATE = 22050 #FRECUENCIA DE MUESTREO
+TRACK_DURATION = 6  # DURACION DE LA PISTA DE AUDIO
+MUESTRA_POR_TRACK = SAMPLE_RATE * TRACK_DURATION
+
+def normalize_audio(signal):
+    """Normaliza la señal de audio al rango [-1,1]."""
+    return signal / max(abs(signal)) if max(abs(signal)) != 0 else signal
 
 
-def save_mfcc(dataset_path, json_path, num_mfcc=40, n_fft=2048, hop_length=512):
-    """
-    Extrae MFCCs de archivos de audio pequeños y los guarda en un archivo JSON junto con las etiquetas de acordes.
+def save_mfcc(dataset_path, json_path, num_mfcc=13, n_fft=2048, hop_length=512, num_segments=5):
+    """Extracts MFCCs from music dataset and saves them into a json file along witgh genre labels.
 
-    :param dataset_path (str): Ruta al conjunto de datos
-    :param json_path (str): Ruta al archivo JSON usado para guardar los MFCCs
-    :param num_mfcc (int): Número de coeficientes a extraer
-    :param n_fft (int): Intervalo para aplicar FFT. Medido en número de muestras
-    :param hop_length (int): Ventana deslizante para FFT. Medido en número de muestras
-    :return:
-    """
+        :param dataset_path (str): Path to dataset
+        :param json_path (str): Path to json file used to save MFCCs
+        :param num_mfcc (int): Number of coefficients to extract
+        :param n_fft (int): Interval we consider to apply FFT. Measured in # of samples
+        :param hop_length (int): Sliding window for FFT. Measured in # of samples
+        :param: num_segments (int): Number of segments we want to divide sample tracks into
+        :return:
+        """
 
-    # Diccionario para almacenar el mapeo, etiquetas y MFCCs
-    data = {"mapping": [], "labels": [], "mfcc": []}
+    # dictionary to store mapping, labels, and MFCCs
+    data = {
+        "mapping": [],
+        "labels": [],
+        "mfcc": []
+    }
 
-    # Itera a través de todas las subcarpetas
+    num_muestras_por_segmento = int(MUESTRA_POR_TRACK / num_segments)
+    num_mfcc_vectors_per_segment = math.ceil(num_muestras_por_segmento / hop_length) #redondea para no dejar en decimal
+
+    # loop through all genre sub-folder
     for i, (dirpath, dirnames, filenames) in enumerate(os.walk(dataset_path)):
 
-        # Asegurarse de que estamos procesando el nivel de subcarpeta
+        # ensure we're processing a genre sub-folder level
         if dirpath is not dataset_path:
 
-            # Guarda la etiqueta (es decir, el nombre de la subcarpeta) en el mapeo
-            etiqueta_semantica = os.path.basename(dirpath)
-            data["mapping"].append(etiqueta_semantica)
-            print("\nProcesando: {}".format(etiqueta_semantica))
+            # save genre label (i.e., sub-folder name) in the mapping
+            semantic_label = dirpath.split("/")[-1]
+            data["mapping"].append(semantic_label)
+            print("\nProcessing: {}".format(semantic_label))
 
-            # Procesa todos los archivos de audio en la subcarpeta
+            # process all audio files in genre sub-dir
             for f in filenames:
 
-                # Carga el archivo de audio
+                # load audio file
                 file_path = os.path.join(dirpath, f)
                 signal, sample_rate = librosa.load(file_path, sr=SAMPLE_RATE)
 
-                # Extrae los MFCC del audio completo
-                mfcc = librosa.feature.mfcc(
-                    y=signal,
-                    sr=sample_rate,
-                    n_mfcc=num_mfcc,
-                    n_fft=n_fft,
-                    hop_length=hop_length,
-                )
-                mfcc = mfcc.T
+                # Normalizar la señal de audio antes de extraer características
+                signal = normalize_audio(signal)
 
-                # Almacena las características MFCC
-                data["mfcc"].append(mfcc.tolist())
-                # Almacena la etiqueta del acorde (nombre de la subcarpeta)
-                data["labels"].append(etiqueta_semantica)
-                print("Procesado: {}".format(file_path))
+                # process all segments of audio file
+                for s in range(num_segments):
 
-    # Guarda los MFCCs en el archivo JSON
+                    # calculate start and finish sample for current segment
+                    inicio_sample = num_muestras_por_segmento * s #s es el segmento actual donde estamos
+                    fin_sample = inicio_sample + num_muestras_por_segmento
+
+                    # extraemos los MFCCs, simple_rate = frecuencia de muestreo
+                    mfcc = librosa.feature.mfcc(y=signal[inicio_sample:fin_sample],
+                                                sr=sample_rate,#frecuencia de muestreo
+                                                n_mfcc=num_mfcc, #numero de mfcc
+                                                n_fft=n_fft,# numero de intervalos para la transformada de fourier
+                                                hop_length=hop_length) #longitud de salto
+                    mfcc = mfcc.T
+
+                    # almacenar Mfcc por segmento if tiene la longitud esperada
+                    if len(mfcc) == num_mfcc_vectors_per_segment: #solo si tenemso el numero de vectores esperados en cada segmento
+                        data["mfcc"].append(mfcc.tolist()) #transformamos la matriz en una lista
+                        data["labels"].append(i - 1) #i cada iteracion es una carpeta de etiqueta diferente
+                        print("{}, segment:{}".format(file_path, s + 1))
+
+    # save MFCCs to json file
     with open(json_path, "w") as fp:
         json.dump(data, fp, indent=4)
 
 
 if __name__ == "__main__":
-    save_mfcc(DATASET_PATH, JSON_PATH, num_mfcc=40, n_fft=2048, hop_length=512)
+    save_mfcc(DATASET_PATH, JSON_PATH, num_segments=10)
