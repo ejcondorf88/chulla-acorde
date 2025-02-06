@@ -6,6 +6,8 @@ import { Card } from 'primereact/card';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { useNavigate } from 'react-router-dom';
+import YouTubePlayer from '../NotasMusicales/YouTubePlayer';
+
 
 const LoadingPage = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -37,8 +39,8 @@ const PaginaBusqueda = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center px-4 pt-16 ">
-      
+    <div className="min-h-screen bg-purple-900 flex flex-col items-center justify-center p-4">
+
       <div className="w-full max-w-4xl mb-4">
         <Button
           label="Ir al Inicio"
@@ -82,6 +84,9 @@ const PaginaBusqueda = () => {
               </h2>
             </Card>
           )}
+
+            <YouTubePlayer url={query} />
+
         </div>
       )}
     </div>

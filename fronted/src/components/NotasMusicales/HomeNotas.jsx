@@ -1,8 +1,10 @@
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import Logo from '../home/Logo';
 import TabEditor from './TabEditor';
+import YouTubePlayer from './YouTubePlayer';
 
 const HomeNotas = memo(() => {
+  const [query, setQuery] = useState(''); 
     return (
         <div className="min-h-screen bg-purple-900 relative flex flex-col">
           
@@ -17,6 +19,8 @@ const HomeNotas = memo(() => {
             </h1>
             
             <TabEditor />
+
+            <YouTubePlayer url={query} />
             
           </div>
         </div>

@@ -13,6 +13,24 @@ const TabEditor = () => {
     { string: 4, fret: 7 }, // A en la 4ta cuerda
     { string: 3, fret: 9 }, // E en la 3ra cuerda
     { string: 2, fret: 12 }, // B en la 2da cuerda
+    { string: 1, fret: 15 },  // D en la 1ra cuerda
+    { string: 6, fret: 3 }, // G en la 6ta cuerda
+    { string: 5, fret: 5 }, // D en la 5ta cuerda
+    { string: 4, fret: 7 }, // A en la 4ta cuerda
+    { string: 3, fret: 9 }, // E en la 3ra cuerda
+    { string: 2, fret: 12 }, // B en la 2da cuerda
+    { string: 1, fret: 15 },  // D en la 1ra cuerda
+    { string: 6, fret: 3 }, // G en la 6ta cuerda
+    { string: 5, fret: 5 }, // D en la 5ta cuerda
+    { string: 4, fret: 7 }, // A en la 4ta cuerda
+    { string: 3, fret: 9 }, // E en la 3ra cuerda
+    { string: 2, fret: 12 }, // B en la 2da cuerda
+    { string: 1, fret: 15 },  // D en la 1ra cuerda
+    { string: 6, fret: 3 }, // G en la 6ta cuerda
+    { string: 5, fret: 5 }, // D en la 5ta cuerda
+    { string: 4, fret: 7 }, // A en la 4ta cuerda
+    { string: 3, fret: 9 }, // E en la 3ra cuerda
+    { string: 2, fret: 12 }, // B en la 2da cuerda
     { string: 1, fret: 15 }  // D en la 1ra cuerda
   ];
 
@@ -30,7 +48,7 @@ const TabEditor = () => {
   const Measure = ({ x, notes, measureNumber }) => (
     <g transform={`translate(${x}, 0)`}>
       <line x1="0" y1="0" x2="0" y2="50" className="stroke-white/20" />
-      <line x1="120" y1="0" x2="120" y2="50" className="stroke-white/20" />
+      <line x1="120" y1="0" x2="10" y2="50" className="stroke-white/20" />
       <text x="0" y="-10" className="text-xs fill-white/60">{measureNumber}</text>
       {notes.map((note, i) => (
         <Note key={i} x={20 + i * 20} stringNum={note.string} fret={note.fret} />
@@ -68,7 +86,7 @@ const TabEditor = () => {
     <div className="min-h-screen bg-neutral-900 p-8">
       <div className="max-w-full mx-auto">
         <div className="bg-neutral-800 rounded-lg p-8">
-          <svg width="600" height={totalLines * 150 + 50}>
+          <svg width="600" height={totalLines * 110 + 50}>
             {[...Array(totalLines)].map((_, lineIndex) => (
               <TabLine key={lineIndex} startMeasure={lineIndex * MEASURES_PER_LINE} y={50 + lineIndex * 150} notes={notes} />
             ))}
