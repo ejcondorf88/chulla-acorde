@@ -1,3 +1,8 @@
 Django==5.0
 djangorestframework==3.14.0
 python-dotenv==1.0.0
+yt-dlp==2023.12.30
+google-api-python-client==2.108.0
+requests==2.31.0
+numpy==1.26.3
+librosa==0.10.1
