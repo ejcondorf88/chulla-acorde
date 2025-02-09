@@ -3,7 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from collections import Counter
-
+import json
+import numpy as keras
+from sklearn.model_selection import train_test_split
+from keras.utils import to_categorical
 def analyze_mfcc_data(json_path):
     """
     Analiza y visualiza los datos MFCC del archivo JSON.
@@ -86,6 +89,60 @@ def analyze_mfcc_data(json_path):
     
     return data
 
+
+
+def prepare_data_for_lstm(json_path):
+    # Cargar datos
+    with open(json_path, "r") as fp:
+        data = json.load(fp)
+    
+    # Verificar estructura del JSON
+    if not all(key in data for key in ["mfcc", "labels", "mapping"]):
+        raise ValueError("El archivo JSON no tiene la estructura esperada.")
+    
+    # Convertir a arrays de numpy
+    mfccs = np.array(data["mfcc"])
+    labels = np.array(data["labels"])
+    
+    # Verificar forma de los MFCCs
+    if len(set(mfcc.shape for mfcc in mfccs)) != 1:
+        raise ValueError("Las muestras MFCC tienen formas diferentes. Normaliza los datos.")
+    
+    # Verificar distribución de etiquetas
+    label_counts = Counter(labels)
+    print("Distribución de etiquetas:", label_counts)
+    
+    # Convertir etiquetas a one-hot encoding
+    num_classes = len(data["mapping"])
+    labels_one_hot = to_categorical(labels, num_classes=num_classes)
+    
+    # Dividir los datos en entrenamiento, validación y prueba
+    X_train, X_test, y_train, y_test = train_test_split(mfccs, labels_one_hot, test_size=0.2, random_state=42)
+    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
+    
+    # Normalizar los MFCCs (opcional, dependiendo de los valores)
+    def normalize_mfcc(mfcc):
+        return (mfcc - np.mean(mfcc)) / np.std(mfcc)
+    
+    X_train = np.array([normalize_mfcc(mfcc) for mfcc in X_train])
+    X_val = np.array([normalize_mfcc(mfcc) for mfcc in X_val])
+    X_test = np.array([normalize_mfcc(mfcc) for mfcc in X_test])
+    
+    print("\n=== Datos Preparados ===")
+    print(f"Forma de X_train: {X_train.shape}")
+    print(f"Forma de y_train: {y_train.shape}")
+    print(f"Forma de X_val: {X_val.shape}")
+    print(f"Forma de y_val: {y_val.shape}")
+    print(f"Forma de X_test: {X_test.shape}")
+    print(f"Forma de y_test: {y_test.shape}")
+    
+    return X_train, X_val, X_test, y_train, y_val, y_test, data["mapping"]
+
+# Ejemplo de uso
+json_path = r"C:\workspace\chulla-acorde\backend\prediction_app\utils\datos_acordes.json"
+X_train, X_val, X_test, y_train, y_val, y_test, mapping = prepare_data_for_lstm(json_path)
 if __name__ == "__main__":
-    json_path = "F:/ProyectoExpoMineria/PruebaRNN/JSON/datos_acordes.json"  # Ajusta esta ruta
+    json_path = r"C:\workspace\chulla-acorde\backend\prediction_app\utils\datos_acordes.json"  # Ajusta esta ruta
     data = analyze_mfcc_data(json_path)
+    X_train, X_val, X_test, y_train, y_val, y_test, mapping = prepare_data_for_lstm(json_path)
+    
