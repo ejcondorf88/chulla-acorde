@@ -1,126 +1,62 @@
 import json
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-from collections import Counter
-import json
-import numpy as keras
 from sklearn.model_selection import train_test_split
 from keras.utils import to_categorical
-def analyze_mfcc_data(json_path):
+from collections import Counter
+
+def analyze_and_prepare_data(json_path):
     """
-    Analiza y visualiza los datos MFCC del archivo JSON.
+    Analiza y prepara los datos MFCC y etiquetas para entrenar un modelo LSTM.
+    Incluye validaciones para evitar errores comunes.
     """
     # Cargar datos
     with open(json_path, "r") as fp:
         data = json.load(fp)
     
     # Extraer información básica
-    num_samples = len(data["mfcc"])
-    num_classes = len(data["mapping"])
-    mfcc_shape = np.array(data["mfcc"][0]).shape
-    
-    # Análisis de etiquetas
-    label_counts = Counter(data["labels"])
-    
-    print("\n=== Información General ===")
-    print(f"Número total de muestras: {num_samples}")
-    print(f"Número de clases: {num_classes}")
-    print(f"Dimensiones de cada MFCC: {mfcc_shape}")
-    print("\n=== Distribución de Clases ===")
-    for label_idx, count in label_counts.items():
-        print(f"{data['mapping'][label_idx]}: {count} muestras")
-    
-    # Visualizaciones
-    plt.figure(figsize=(15, 10))
-    
-    # 1. Distribución de clases
-    plt.subplot(2, 2, 1)
-    plt.bar(data["mapping"], [label_counts[i] for i in range(num_classes)])
-    plt.xticks(rotation=45)
-    plt.title("Distribución de Clases")
-    plt.xlabel("Clase")
-    plt.ylabel("Número de muestras")
-    
-    # 2. Ejemplo de MFCC
-    plt.subplot(2, 2, 2)
-    example_mfcc = np.array(data["mfcc"][0])
-    sns.heatmap(example_mfcc.T, cmap='viridis')
-    plt.title("Ejemplo de MFCC")
-    plt.xlabel("Frames")
-    plt.ylabel("Coeficientes MFCC")
-    
-    # 3. Estadísticas de MFCC
-    all_mfcc_values = np.concatenate([np.array(mfcc).flatten() for mfcc in data["mfcc"]])
-    plt.subplot(2, 2, 3)
-    plt.hist(all_mfcc_values, bins=50)
-    plt.title("Distribución de valores MFCC")
-    plt.xlabel("Valor MFCC")
-    plt.ylabel("Frecuencia")
-    
-    # 4. Análisis de valores atípicos por clase
-    plt.subplot(2, 2, 4)
-    mfcc_means_by_class = []
-    for i in range(num_classes):
-        class_mfccs = [np.array(data["mfcc"][j]) for j, label in enumerate(data["labels"]) if label == i]
-        class_means = np.mean([np.mean(mfcc) for mfcc in class_mfccs])
-        mfcc_means_by_class.append(class_means)
-    
-    plt.boxplot([mfcc_means_by_class])
-    plt.title("Distribución de medias MFCC por clase")
-    plt.xticks([1], ["Clases"])
-    
-    plt.tight_layout()
-    plt.show()
-    
-    # Verificar consistencia de datos
-    print("\n=== Verificación de Datos ===")
-    shapes = [np.array(mfcc).shape for mfcc in data["mfcc"]]
-    if len(set(shapes)) == 1:
-        print("✓ Todas las muestras MFCC tienen la misma forma")
-    else:
-        print("⚠ ¡Advertencia! Hay muestras MFCC con diferentes formas")
-    
-    # Verificar valores
-    mfcc_array = np.array(data["mfcc"])
-    print(f"Rango de valores MFCC: [{np.min(mfcc_array):.2f}, {np.max(mfcc_array):.2f}]")
-    print(f"Media de valores MFCC: {np.mean(mfcc_array):.2f}")
-    print(f"Desviación estándar de valores MFCC: {np.std(mfcc_array):.2f}")
-    
-    return data
-
-
-
-def prepare_data_for_lstm(json_path):
-    # Cargar datos
-    with open(json_path, "r") as fp:
-        data = json.load(fp)
-    
-    # Verificar estructura del JSON
-    if not all(key in data for key in ["mfcc", "labels", "mapping"]):
-        raise ValueError("El archivo JSON no tiene la estructura esperada.")
-    
-    # Convertir a arrays de numpy
     mfccs = np.array(data["mfcc"])
     labels = np.array(data["labels"])
+    mapping = data["mapping"]
+    num_classes = len(mapping)
     
-    # Verificar forma de los MFCCs
-    if len(set(mfcc.shape for mfcc in mfccs)) != 1:
-        raise ValueError("Las muestras MFCC tienen formas diferentes. Normaliza los datos.")
+    print("\n=== Información General ===")
+    print(f"Número total de muestras: {len(mfccs)}")
+    print(f"Número de clases: {num_classes}")
+    print(f"Dimensiones de cada MFCC: {mfccs[0].shape}")
+        # Ver el contenido de 'labels'
+    print("\nLabels (etiquetas de clase ssssssssssss):")
+    print(data["labels"])
+    # Verificar consistencia de formas en MFCCs
+    mfcc_shapes = [mfcc.shape for mfcc in mfccs]
+    if len(set(mfcc_shapes)) != 1:
+        raise ValueError("¡Error! Las muestras MFCC tienen formas inconsistentes.")
+    else:
+        print("✓ Todas las muestras MFCC tienen la misma forma.")
+    
+    # Verificar valores de MFCCs
+    print(f"Rango de valores MFCC: [{np.min(mfccs):.2f}, {np.max(mfccs):.2f}]")
+    print(f"Media de valores MFCC: {np.mean(mfccs):.2f}")
+    print(f"Desviación estándar de valores MFCC: {np.std(mfccs):.2f}")
     
     # Verificar distribución de etiquetas
     label_counts = Counter(labels)
-    print("Distribución de etiquetas:", label_counts)
+    print("\n=== Distribución de Etiquetas ===")
+    for label_idx, count in label_counts.items():
+        print(f"{mapping[label_idx]}: {count} muestras")
     
     # Convertir etiquetas a one-hot encoding
-    num_classes = len(data["mapping"])
     labels_one_hot = to_categorical(labels, num_classes=num_classes)
+    print("\nEtiquetas convertidas a one-hot encoding.")
     
     # Dividir los datos en entrenamiento, validación y prueba
-    X_train, X_test, y_train, y_test = train_test_split(mfccs, labels_one_hot, test_size=0.2, random_state=42)
-    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        mfccs, labels_one_hot, test_size=0.2, random_state=42, stratify=labels
+    )
+    X_train, X_val, y_train, y_val = train_test_split(
+        X_train, y_train, test_size=0.25, random_state=42, stratify=np.argmax(y_train, axis=1)
+    )
     
-    # Normalizar los MFCCs (opcional, dependiendo de los valores)
+    # Normalizar los MFCCs
     def normalize_mfcc(mfcc):
         return (mfcc - np.mean(mfcc)) / np.std(mfcc)
     
@@ -128,7 +64,8 @@ def prepare_data_for_lstm(json_path):
     X_val = np.array([normalize_mfcc(mfcc) for mfcc in X_val])
     X_test = np.array([normalize_mfcc(mfcc) for mfcc in X_test])
     
-    print("\n=== Datos Preparados ===")
+    # Validar formas finales
+    print("\n=== Validación de Formas ===")
     print(f"Forma de X_train: {X_train.shape}")
     print(f"Forma de y_train: {y_train.shape}")
     print(f"Forma de X_val: {X_val.shape}")
@@ -136,13 +73,22 @@ def prepare_data_for_lstm(json_path):
     print(f"Forma de X_test: {X_test.shape}")
     print(f"Forma de y_test: {y_test.shape}")
     
-    return X_train, X_val, X_test, y_train, y_val, y_test, data["mapping"]
+    # Validar compatibilidad entre X e y
+    if X_train.shape[0] != y_train.shape[0]:
+        raise ValueError("¡Error! El número de muestras en X_train y y_train no coincide.")
+    if X_val.shape[0] != y_val.shape[0]:
+        raise ValueError("¡Error! El número de muestras en X_val y y_val no coincide.")
+    if X_test.shape[0] != y_test.shape[0]:
+        raise ValueError("¡Error! El número de muestras en X_test y y_test no coincide.")
+    
+    print("\n✓ Validación completada. Los datos están listos para entrenar el modelo.")
+    
+    return X_train, X_val, X_test, y_train, y_val, y_test, mapping
 
 # Ejemplo de uso
-json_path = r"C:\workspace\chulla-acorde\backend\prediction_app\utils\datos_acordes.json"
-X_train, X_val, X_test, y_train, y_val, y_test, mapping = prepare_data_for_lstm(json_path)
 if __name__ == "__main__":
-    json_path = r"C:\workspace\chulla-acorde\backend\prediction_app\utils\datos_acordes.json"  # Ajusta esta ruta
-    data = analyze_mfcc_data(json_path)
-    X_train, X_val, X_test, y_train, y_val, y_test, mapping = prepare_data_for_lstm(json_path)
-    
+    json_path = r"C:\workspace\chulla-acorde\backend\prediction_app\utils\datos_acordes.json"
+    try:
+        X_train, X_val, X_test, y_train, y_val, y_test, mapping = analyze_and_prepare_data(json_path)
+    except Exception as e:
+        print(f"Error durante la preparación de datos: {e}")
