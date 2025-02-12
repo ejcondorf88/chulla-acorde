@@ -5,7 +5,7 @@ class YTService {
     this.key = "AIzaSyB7JQz4lL9YUO9yOu8rP0k0k0k0k0k0k0";
   }
   async getVideos(query) {
-    const { data } = await axios.get(`https://pokeapi.co/api/v2/pokemon/ditto`);
+    const { data } = await axios.get(`http://localhost:8000/api/process_youtube`);
     console.log(data);
     console.log(query);
     return data;

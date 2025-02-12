@@ -103,3 +103,47 @@ htmlcov/
 # Archivos de sistema
 .DS_Store
 Thumbs.db
+
+
+# Archivos de entorno virtual
+venv/
+.env
+
+# Archivos de configuración local
+*.local
+
+# Archivos de IDE
+.idea/
+.vscode/
+
+# Archivos de Node.js
+node_modules/
+yarn.lock
+
+# Archivos de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Archivos de Django
+*.log
+*.pot
+*.pyc
+*.mo
+
+# Archivos de compilación
+build/
+dist/
+*.egg-info/
+
+# Ignorar archivos específicos en la carpeta backend
+backend/**/*.pb
+backend/**/*.wav
+backend/**/*.h5
+backend/**/*.json
+backend/**/*.index
+backend/prediction_app/utils/audio.wav
+backend/models

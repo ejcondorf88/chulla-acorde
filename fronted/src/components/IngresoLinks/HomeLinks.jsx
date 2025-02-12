@@ -1,25 +1,25 @@
-import { useState } from 'react';
+import React from 'react';
 import Logo from '../home/Logo';
 import PaginaBusqueda from './PaginaBusqueda';
 import YouTubePlayer from '../NotasMusicales/YouTubePlayer';
 
 const BarraLinks = () => {
-  
   return (
-    <div className="min-h-screen bg-purple-900 relative flex flex-col">
-      
-      <div className="container mx-auto px-4 py-6 relative">
+    <div className="min-h-screen bg-purple-900 flex flex-col">
+      {/* Encabezado con el logo */}
+      <header className="container mx-auto px-4 py-6">
         <Logo />
-      </div>
-      
-      <div className="flex-1 flex flex-col items-center justify-center relative text-center px-4">
+      </header>
+
+      {/* Contenido principal */}
+      <main className="flex-1 flex flex-col items-center justify-center text-center px-4 space-y-8">
+        {/* Componente de búsqueda */}
         <PaginaBusqueda />
 
+        {/* Reproductor de YouTube */}
         <YouTubePlayer />
-
-      </div>
+      </main>
     </div>
-
   );
 };
 

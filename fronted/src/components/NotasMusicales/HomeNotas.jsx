@@ -18,7 +18,6 @@ const HomeNotas = memo(() => {
               Tus notas musicales son:
             </h1>
             
-            <TabEditor />
 
             <YouTubePlayer url={query} />
             
