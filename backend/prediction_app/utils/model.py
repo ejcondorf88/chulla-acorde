@@ -287,9 +287,10 @@ if __name__ == "__main__":
         y_pred_prob = ChordModel.ensemble_predict(models, X_test)
         y_pred = np.argmax(y_pred_prob, axis=1)
         accuracy = np.mean(y_pred == y_test)
-        print(f"\nEnsemble Test Accuracy: {accuracy:.4f}")
-        import tensorflow as tf
-        print(tf.__version__)
+        for i, model in enumerate(models):
+                model.save(f"models/ensemble_model_{i+1}.h5")
+                print(f"Modelo {i+1} guardado en 'models/ensemble_model_{i+1}.h5'")
+        
     else:
         # Entrenamiento de un solo modelo
         model = ChordModel.build_model(input_shape, num_classes)
