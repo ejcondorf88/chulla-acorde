@@ -3,15 +3,16 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 import seaborn as sns
+import tensorflow as tf
 from sklearn.model_selection import train_test_split, KFold
 from sklearn.metrics import confusion_matrix, classification_report
-import tensorflow as keras
-from keras.models import Sequential
-from keras.layers import LSTM, Dense, Dropout, Bidirectional, BatchNormalization
-from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
-from keras.optimizers import Adam
-from keras.losses import SparseCategoricalCrossentropy
-import librosa
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Dropout, Bidirectional, BatchNormalization
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.losses import SparseCategoricalCrossentropy
+from tensorflow.keras import layers, models, optimizers
+
 
 class ChordModel:
     DATA_PATH = r"C:\workspace\chulla-acorde\backend\prediction_app\utils\datos_acordes.json"
@@ -287,7 +288,8 @@ if __name__ == "__main__":
         y_pred = np.argmax(y_pred_prob, axis=1)
         accuracy = np.mean(y_pred == y_test)
         print(f"\nEnsemble Test Accuracy: {accuracy:.4f}")
-        
+        import tensorflow as tf
+        print(tf.__version__)
     else:
         # Entrenamiento de un solo modelo
         model = ChordModel.build_model(input_shape, num_classes)

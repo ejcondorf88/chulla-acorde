@@ -1,9 +1,10 @@
 import json
 import numpy as np
+import tensorflow as tf
 from sklearn.model_selection import train_test_split
-from keras.utils import to_categorical
+from tf.keras.utils import to_categorical, plot_model
+import matplotlib.pyplot as plt
 from collections import Counter
-
 def analyze_and_prepare_data(json_path):
     """
     Analiza y prepara los datos MFCC y etiquetas para entrenar un modelo LSTM.
