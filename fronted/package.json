@@ -19,7 +19,8 @@
     "react-dom": "^18.3.1",
     "react-player": "^2.16.0",
     "react-router-dom": "^7.1.5",
-    "react-transition-group": "^4.4.5"
+    "react-transition-group": "^4.4.5",
+    "vexflow": "^4.2.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

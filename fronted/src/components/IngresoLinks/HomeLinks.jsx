@@ -2,6 +2,7 @@ import React from 'react';
 import Logo from '../home/Logo';
 import PaginaBusqueda from './PaginaBusqueda';
 import YouTubePlayer from '../NotasMusicales/YouTubePlayer';
+import VideoList from '../NotasMusicales/VideoList';
 
 const BarraLinks = () => {
   return (
@@ -15,9 +16,11 @@ const BarraLinks = () => {
       <main className="flex-1 flex flex-col items-center justify-center text-center px-4 space-y-8">
         {/* Componente de búsqueda */}
         <PaginaBusqueda />
+        
 
         {/* Reproductor de YouTube */}
         <YouTubePlayer />
+
       </main>
     </div>
   );
