@@ -54,13 +54,14 @@ export const YoutubeProcessor = () => {
 
       {/* Pantalla de carga */}
       {loading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
             <div className="animate-spin h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full"></div>
             <p className="mt-4 text-gray-700">Procesando video...</p>
           </div>
         </div>
       )}
+
 
       {error && (
         <div className="text-red-500 mb-4 p-4 bg-red-50 rounded-lg border border-red-200">
