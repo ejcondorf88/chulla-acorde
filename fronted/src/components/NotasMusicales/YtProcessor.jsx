@@ -69,7 +69,7 @@ export const YoutubeProcessor = () => {
       )}
 
       {response?.success && response?.data && (
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="p-4 min-h-screen max-w-4xl mx-auto bg-gray-800 text-white relative">
           <YouTubePlayer url={url} />
           <div className="grid gap-6">
             <div className="flex items-center gap-3">
@@ -92,7 +92,7 @@ export const YoutubeProcessor = () => {
               <Library className="w-6 h-6 text-green-500" />
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Categoría</h3>
-                <p className="text-lg font-semibold">{response.data.Library}</p>
+                <p className="text-lg font-semibold">{response.data.category}</p>
               </div>
             </div>
 
@@ -107,7 +107,7 @@ export const YoutubeProcessor = () => {
             {response.data.lyrics && (
               <div className="mt-4">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Letra</h3>
-                <div className="bg-gray-50 p-4 rounded-lg whitespace-pre-wrap">
+                <div className="bg-gray-900 p-4 rounded-lg whitespace-pre-wrap">
                   {response.data.lyrics}
                 </div>
               </div>
@@ -116,16 +116,10 @@ export const YoutubeProcessor = () => {
             {/* Sección de acordes */}
             {response.data.acordes && response.data.acordes.length > 0 && (
               <div className="mt-4">
-                {response.data.acordes && (
-                <div className="mt-6">
-                   <h3 className="text-sm font-medium text-gray-500 mb-2">Partitura</h3>
-                    <Partitura acordes={response.data.acordes} />
-                  </div>
-                )}
-
+                <h3 className="text-sm font-medium text-gray-6000 mb-2">Partitura</h3>
+                <Partitura acordes={response.data.acordes} />
               </div>
             )}
-            
           </div>
         </div>
       )}

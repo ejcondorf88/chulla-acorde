@@ -62,6 +62,35 @@ def process_youtube(request):
                 "song_title": song_title,
                 "category": category_name,
                 "lyrics": lyrics,
+                "acordes": [
+                            # Intro y Verso (Riff Principal)
+                            'E3', 'G3', 'A3', 'E3', 'G3', 'B3', 'A3', 'E3', 'G3', 'A3',
+                            'E3', 'G3', 'A3', 'E3', 'G3', 'B3', 'A3', 'E3', 'G3', 'A3',
+
+                            # Coro ("Can you help me?")
+                            'D3', 'A3', 'G3', 'D3', 'A3', 'G3',
+                            'E3', 'G3', 'A3', 'E3', 'G3', 'A3',
+
+                            # Verso (Riff Principal de nuevo)
+                            'E3', 'G3', 'A3', 'E3', 'G3', 'B3', 'A3', 'E3', 'G3', 'A3',
+                            'E3', 'G3', 'A3', 'E3', 'G3', 'B3', 'A3', 'E3', 'G3', 'A3',
+
+                            # Coro (Repetición)
+                            'D3', 'A3', 'G3', 'D3', 'A3', 'G3',
+                            'E3', 'G3', 'A3', 'E3', 'G3', 'A3',
+
+                            # Solo de Guitarra (Ritmo sobre estos acordes)
+                            'E5', 'D5', 'A5', 'G5', 'E5', 'D5', 'A5', 'G5',
+                            'A5', 'D5', 'A5', 'G5', 'E5', 'G5', 'A5', 'E5',
+
+                            # Último Coro
+                            'D3', 'A3', 'G3', 'D3', 'A3', 'G3',
+                            'E3', 'G3', 'A3', 'E3', 'G3', 'A3',
+
+                            # Outro (Se repite el riff principal y termina abruptamente)
+                            'E3', 'G3', 'A3', 'E3', 'G3', 'B3', 'A3',
+                            'E3', 'G3', 'A3', 'E3', 'G3', 'A3'
+                    ],
                 "audio_path": audio_path
             }
         })
